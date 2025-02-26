@@ -5,6 +5,7 @@ import com.playmusicapplication.VLCApplication.mapper.MusicMapper;
 import com.playmusicapplication.VLCApplication.models.Music;
 import com.playmusicapplication.VLCApplication.models.User;
 import com.playmusicapplication.VLCApplication.repositories.MusicRepository;
+import com.playmusicapplication.VLCApplication.repositories.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +18,15 @@ public class MusicService {
     private final MusicRepository musicRepository;
     private final MusicMapper musicMapper;
     private final FileStorageService fileStorageService;
+    private final UserRepository userRepository;
+
 
     public MusicService(MusicRepository musicRepository, MusicMapper musicMapper, 
-                       FileStorageService fileStorageService) {
+                       FileStorageService fileStorageService, UserRepository userRepository) {
         this.musicRepository = musicRepository;
         this.musicMapper = musicMapper;
         this.fileStorageService = fileStorageService;
+        this.userRepository = userRepository;
     }
 
     public MusicDTO uploadMusic(MusicDTO musicDTO, MultipartFile file, MultipartFile coverImage) {
@@ -40,10 +44,16 @@ public class MusicService {
         music.setPlays(0);
 
         if (music.getUser() == null) {
-            User defaultUser = new User();
-            defaultUser.setId(0L);  // ou l'id d'un utilisateur système
-            music.setUser(defaultUser);
+            // User defaultUser = new User();
+            // defaultUser.setId(1L);  // ou l'id d'un utilisateur système
+            // music.setUser(defaultUser);
+
+            User defaultUser = userRepository.findById(1L)
+              .orElseThrow(() -> new RuntimeException("Utilisateur par défaut introuvable"));
+        music.setUser(defaultUser);
         }
+
+        
 
         return musicMapper.toDto(musicRepository.save(music));
     }

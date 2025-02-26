@@ -82,7 +82,7 @@ Future<void> uploadMusic({
 
   Future<void> createPlaylist(String name, String description) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/playlists'),
+      Uri.parse('http://localhost:8080/api/playlists'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'name': name,
