@@ -65,10 +65,16 @@ public class MusicService {
         return musicMapper.toDto(musicRepository.save(music));
     }
 
-    public List<MusicDTO> getAllMusic() {
+    public List<MusicDTO> getAllMusic(){
         List<Music> musicList = musicRepository.findAll();
         return musicList.stream()
                         .map(musicMapper::toDto)
                         .collect(Collectors.toList());
+    }
+
+    public MusicDTO getMusic(Long id) {
+        Music music = musicRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Music not found"));
+        return musicMapper.toDto(music);
     }
 }

@@ -15,5 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*") // Autoriser Flutter à accéder depuis le port 3000 (ou l'URL de votre app Flutter)
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Méthodes autorisées
                 .allowedHeaders("*"); // Autoriser tous les en-têtes
+                
     }
 }

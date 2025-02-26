@@ -5,7 +5,9 @@ import 'package:playmusicapplication/screens/list_music.dart';
 import 'package:playmusicapplication/widgets/menu.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+   final int userId;
+  
+  HomeScreen({Key? key, required this.userId}): super(key: key);
 
   final List<Music> topLike = [
     Music(
@@ -42,7 +44,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 20, 39, 56), // 🔵 Fond bleu sombre
-      drawer: MenuDrawer(),
+      drawer: MenuDrawer(userId: userId),
       appBar: AppBar(
         title: Row(
           children: [

@@ -7,12 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
-
-@Getter
-@Setter
 @Entity
 @Table(name = "playlist_content_music")
 public class PlaylistContentMusic {
@@ -29,5 +24,14 @@ public class PlaylistContentMusic {
     private Music music;
 
     private int position;
+
+    public PlaylistContentMusic(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
 }
 

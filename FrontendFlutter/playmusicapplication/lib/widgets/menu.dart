@@ -4,7 +4,9 @@ import 'package:playmusicapplication/screens/music-screen.dart';
 import 'package:playmusicapplication/screens/list_music.dart';
 
 class MenuDrawer extends StatelessWidget {
-  const MenuDrawer({Key? key}) : super(key: key);
+  final int userId;
+
+  const MenuDrawer({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class MenuDrawer extends StatelessWidget {
             title: Text('Playlists'),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return PlaylistScreen();
+                return UserPlaylistsScreen(userId: userId);
               }));
             },
           ),

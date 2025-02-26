@@ -17,6 +17,7 @@ class _MusicUploadWidgetState extends State<MusicUploadWidget> {
   final _artistController = TextEditingController();
   final _albumController = TextEditingController();
   final _genreController = TextEditingController();
+
   Uint8List? _audioBytes;
   Uint8List? _coverBytes;
   String? _audioFileName;
@@ -61,303 +62,133 @@ class _MusicUploadWidgetState extends State<MusicUploadWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Thème de couleurs basé sur le bleu sombre et ses variantes
-    const Color primaryDarkBlue = Color(0xFF1A2A3A); // Bleu nuit profond
-    const Color secondaryDarkBlue = Color(0xFF2C3E50); // Bleu foncé
-    const Color accentBlue = Color(0xFF3498DB); // Bleu clair pour les accents
-    const Color textLight = Colors.white; // Texte clair pour contraste
-    const Color greyHint = Colors.grey; // Texte gris pour les hints
-
-    return Scaffold(
-      backgroundColor: primaryDarkBlue, // Fond bleu nuit
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Titre du formulaire avec animation de fade
-            AnimatedOpacity(
-              opacity: 1.0,
-              duration: const Duration(milliseconds: 500),
-              child: const Text(
-                "Upload Your Music",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: textLight,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black26,
-                      offset: Offset(2, 2),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Card contenant le formulaire pour un effet moderne
-            Card(
-              elevation: 8,
-              color: secondaryDarkBlue, // Fond bleu foncé pour le card
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Champ Title
-                    _buildTextField(
-                      controller: _titleController,
-                      label: 'Title',
-                      icon: Icons.music_note,
-                      color: accentBlue,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Champ Artist
-                    _buildTextField(
-                      controller: _artistController,
-                      label: 'Artist',
-                      icon: Icons.person,
-                      color: accentBlue,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Champ Album
-                    _buildTextField(
-                      controller: _albumController,
-                      label: 'Album',
-                      icon: Icons.album,
-                      color: accentBlue,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Champ Genre
-                    _buildTextField(
-                      controller: _genreController,
-                      label: 'Genre',
-                      icon: Icons.category,
-                      color: accentBlue,
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Sélection du fichier audio avec bouton stylisé
-                    _buildFileButton(
-                      onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.audio);
-                        if (result != null) {
-                          setState(() {
-                            _audioBytes = result.files.single.bytes;
-                            _audioFileName = result.files.single.name;
-                          });
-                        }
-                      },
-                      label: 'Select Audio File',
-                      icon: Icons.audio_file,
-                      selectedFileName: _audioFileName,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Sélection de l'image de couverture avec bouton stylisé
-                    _buildFileButton(
-                      onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
-                        if (result != null) {
-                          setState(() {
-                            _coverBytes = result.files.single.bytes;
-                            _coverFileName = result.files.single.name;
-                          });
-                        }
-                      },
-                      label: 'Select Cover Image',
-                      icon: Icons.image,
-                      selectedFileName: _coverFileName,
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Bouton d'upload avec animation
-                    AnimatedButton(
-                      isLoading: _isUploading,
-                      onPressed: (_audioBytes == null || _coverBytes == null || _isUploading)
-                          ? null
-                          : _uploadMusic,
-                      child: const Text(
-                        'Upload Music',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textLight),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Statut d'upload
-            if (_uploadStatus != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Center(
-                  child: Text(
-                    _uploadStatus!,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: _uploadStatus!.contains("✅") ? Colors.lightGreenAccent : Colors.redAccent,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black26,
-                          offset: Offset(1, 1),
-                          blurRadius: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Widget pour les champs de texte stylisés
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required Color color,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70),
-        prefixIcon: Icon(icon, color: color),
-        filled: true,
-        fillColor: Colors.blueGrey[800],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: color, width: 2),
-        ),
-      ),
-      style: const TextStyle(color: Colors.white),
-    );
-  }
-
-  // Widget pour les boutons de sélection de fichiers
-  Widget _buildFileButton({
-    required VoidCallback onPressed,
-    required String label,
-    required IconData icon,
-    required String? selectedFileName,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueGrey[700],
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 8),
-          Text(label, style: const TextStyle(fontSize: 16)),
+          const Text(
+            "Upload Music",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueAccent,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Title
+          _buildTextField(_titleController, 'Title'),
+          const SizedBox(height: 15),
+
+          // Artist
+          _buildTextField(_artistController, 'Artist'),
+          const SizedBox(height: 15),
+
+          // Album
+          _buildTextField(_albumController, 'Album'),
+          const SizedBox(height: 15),
+
+          // Genre
+          _buildTextField(_genreController, 'Genre'),
+          const SizedBox(height: 20),
+
+          // Select Audio File
+          _buildFilePickerButton('Select Audio File', _audioFileName, () async {
+            FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.audio);
+            if (result != null) {
+              setState(() {
+                _audioBytes = result.files.single.bytes;
+                _audioFileName = result.files.single.name;
+              });
+            }
+          }),
+          const SizedBox(height: 10),
+
+          // Select Cover Image
+          _buildFilePickerButton('Select Cover Image', _coverFileName, () async {
+            FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+            if (result != null) {
+              setState(() {
+                _coverBytes = result.files.single.bytes;
+                _coverFileName = result.files.single.name;
+              });
+            }
+          }),
+          const SizedBox(height: 20),
+
+          // Upload Button
+          _buildUploadButton(),
+          if (_uploadStatus != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(
+                _uploadStatus!,
+                style: TextStyle(
+                  color: _uploadStatus!.contains("✅") ? Colors.green : Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
         ],
       ),
     );
   }
-}
 
-// Widget personnalisé pour le bouton d'upload avec animation
-class AnimatedButton extends StatefulWidget {
-  final bool isLoading;
-  final VoidCallback? onPressed;
-  final Widget child;
-
-  const AnimatedButton({
-    required this.isLoading,
-    required this.onPressed,
-    required this.child,
-    super.key,
-  });
-
-  @override
-  State<AnimatedButton> createState() => _AnimatedButtonState();
-}
-
-class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    if (widget.isLoading) _controller.forward();
-  }
-
-  @override
-  void didUpdateWidget(AnimatedButton oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isLoading != oldWidget.isLoading) {
-      if (widget.isLoading) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    const Color primaryDarkBlue = Color(0xFF1A2A3A);
-    const Color accentBlue = Color(0xFF3498DB);
-
-    return ScaleTransition(
-      scale: _animation,
-      child: ElevatedButton(
-        onPressed: widget.onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: accentBlue,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 4,
-          disabledBackgroundColor: Colors.blueGrey[600],
-          disabledForegroundColor: Colors.white70,
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.blueAccent),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
         ),
-        child: widget.isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-              )
-            : widget.child,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue, width: 2),
+        ),
       ),
+    );
+  }
+
+  Widget _buildFilePickerButton(String label, String? fileName, VoidCallback onPressed) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      onPressed: onPressed,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(fileName != null ? Icons.check_circle : Icons.upload_file),
+          const SizedBox(width: 10),
+          Text(fileName != null ? 'Selected: $fileName' : label),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUploadButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      onPressed: (_audioBytes == null || _coverBytes == null || _isUploading)
+          ? null
+          : _uploadMusic,
+      child: _isUploading
+          ? const CircularProgressIndicator(color: Colors.white)
+          : const Text('Upload'),
     );
   }
 }

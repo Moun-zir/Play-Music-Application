@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -29,7 +30,8 @@ public class Playlist {
 
     private String name;
     private String description;
-    private String coverUrl;
+   @Lob // Stocker l'image sous forme de blob (optionnel si URL utilisée)
+    private byte[] coverImage;
     private LocalDateTime createdAt;
 
     @ManyToOne
@@ -41,5 +43,14 @@ public class Playlist {
 
     @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL)
     private List<PlaylistContentVideo> videoContent = new ArrayList<>();
+
+     // Getters et setters
+     public byte[] getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(byte[] coverImage) {
+        this.coverImage = coverImage;
+    }
 }
 

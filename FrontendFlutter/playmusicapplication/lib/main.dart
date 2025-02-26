@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:playmusicapplication/screens/home1.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp(userId: 1));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+   final int userId;
+ 
+  const MyApp({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
           titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
         ),
     ),
-      home: HomeScreen(),
+      home: HomeScreen(userId: userId),
     );
   }
 }
