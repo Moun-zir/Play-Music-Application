@@ -1,48 +1,21 @@
-package com.playmusicapplication.VLCApplication.controller;
+package com.playmusicapplication.VLCApplication.controllers;
 
-import com.playmusicapplication.VLCApplication.dto.CreatePlaylistDTO;
 import com.playmusicapplication.VLCApplication.dto.PlaylistDTO;
-import com.playmusicapplication.VLCApplication.service.PlaylistService;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.playmusicapplication.VLCApplication.services.PlaylistService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/playlists")
 public class PlaylistController {
+    private final PlaylistService playlistService;
 
-    @Autowired
-    private PlaylistService playlistService;
-
-    // Créer une nouvelle playlist
-    @PostMapping("/create")
-    public PlaylistDTO createPlaylist(@RequestBody CreatePlaylistDTO createPlaylistDTO) {
-        return playlistService.createPlaylist(createPlaylistDTO);
+    public PlaylistController(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 
-    // Récupérer toutes les playlists
-    @GetMapping("/")
-    public List<PlaylistDTO> getAllPlaylists() {
-        return playlistService.getAllPlaylists();
-    }
-
-    // Récupérer une playlist par son ID
-    @GetMapping("/{id}")
-    public PlaylistDTO getPlaylistById(@PathVariable Long id) {
-        return playlistService.getPlaylistById(id);
-    }
-
-    // Mettre à jour une playlist existante
-    @PutMapping("/{id}")
-    public PlaylistDTO updatePlaylist(@PathVariable Long id, @RequestBody CreatePlaylistDTO createPlaylistDTO) {
-        return playlistService.updatePlaylist(id, createPlaylistDTO);
-    }
-
-    // Supprimer une playlist
-    @DeleteMapping("/{id}")
-    public void deletePlaylist(@PathVariable Long id) {
-        playlistService.deletePlaylist(id);
+    @PostMapping
+    public ResponseEntity<PlaylistDTO> createPlaylist(@RequestBody PlaylistDTO playlistDTO) {
+        return ResponseEntity.ok(playlistService.createPlaylist(playlistDTO));
     }
 }

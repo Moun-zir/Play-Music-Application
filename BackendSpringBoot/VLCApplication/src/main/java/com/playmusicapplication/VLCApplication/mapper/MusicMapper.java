@@ -1,11 +1,13 @@
+// MusicMapper.java
 package com.playmusicapplication.VLCApplication.mapper;
 
 import com.playmusicapplication.VLCApplication.dto.MusicDTO;
 import com.playmusicapplication.VLCApplication.models.Music;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MusicMapper {
-
-    public static MusicDTO toDTO(Music music) {
+    public MusicDTO toDto(Music music) {
         MusicDTO dto = new MusicDTO();
         dto.setId(music.getId());
         dto.setTitle(music.getTitle());
@@ -18,13 +20,13 @@ public class MusicMapper {
         dto.setLikes(music.getLikes());
         dto.setPlays(music.getPlays());
         dto.setReleaseDate(music.getReleaseDate());
-        dto.setUserId(music.getUser() != null ? music.getUser().getId() : null); // Si l'utilisateur est présent
+        // Vérifie si le user est null
+        dto.setUserId(music.getUser() != null ? music.getUser().getId() : null);
         return dto;
     }
 
-    public static Music toEntity(MusicDTO dto) {
+    public Music toEntity(MusicDTO dto) {
         Music music = new Music();
-      
         music.setTitle(dto.getTitle());
         music.setArtist(dto.getArtist());
         music.setAlbum(dto.getAlbum());
@@ -35,7 +37,6 @@ public class MusicMapper {
         music.setLikes(dto.getLikes());
         music.setPlays(dto.getPlays());
         music.setReleaseDate(dto.getReleaseDate());
-        // Ici, on suppose que l'on aura l'utilisateur quelque part pour le peupler
         return music;
     }
 }

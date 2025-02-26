@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:playmusicapplication/models/music_mod.dart';
 import 'package:playmusicapplication/widgets/music_card.dart';
 import 'package:playmusicapplication/screens/list_music.dart';
+import 'package:playmusicapplication/widgets/menu.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -41,15 +42,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 20, 39, 56), // 🔵 Fond bleu sombre
+      drawer: MenuDrawer(),
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MusicListScreen();
-            }));
-          },
-        ),
         title: Row(
           children: [
             Image.asset("assets/images/jj.jpg", height: 30),
