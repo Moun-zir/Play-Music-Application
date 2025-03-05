@@ -33,11 +33,8 @@ class Music {
       album: json['album'],
       genre: json['genre'],
       coverImageUrl: json['coverImageUrl'] ?? '',
-      // duration: json['duration'],
-      fileUrl: json['fileUrl'],
+      fileUrl: json['fileUrl'] ?? '', // Ne pas dupliquer l'URL ici
       likes: json['likes'] ?? 0,
-      // plays: json['plays'],
-
     );
   }
 

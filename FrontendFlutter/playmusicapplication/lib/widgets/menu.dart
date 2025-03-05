@@ -45,15 +45,15 @@ class MenuDrawer extends StatelessWidget {
               }));
             },
           ),
-          ListTile(
-            leading: Icon(Icons.contact_mail),
-            title: Text('List Playlists'),
-           onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MusicListScreen();
-              }));
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.contact_mail),
+          //   title: Text('List Playlists'),
+          //  onTap: () {
+          //     Navigator.push(context, MaterialPageRoute(builder: (context) {
+          //       return MusicListScreen();
+          //     }));
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.help),
             title: Text('FAQs'),

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:53836")
 @RestController
 @RequestMapping("/api/music")
 public class MusicController {
@@ -27,7 +27,7 @@ public class MusicController {
             @RequestPart("file") MultipartFile file,
             @RequestPart("coverImage") MultipartFile coverImage) throws JsonProcessingException {
     
-        // Cela pourrait aussi être utile pour déboguer
+        
         System.out.println("musicDTOJson: " + musicDTOJson);
     
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,7 +37,7 @@ public class MusicController {
         System.out.println("Fichier audio : " + file.getOriginalFilename());
         System.out.println("Image de couverture : " + coverImage.getOriginalFilename());
 
-        // Envoie le service pour traitement
+    
         return ResponseEntity.ok(musicService.uploadMusic(musicDTO, file, coverImage));
     }
     
@@ -55,6 +55,9 @@ public class MusicController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<MusicDTO> getMusic(@PathVariable Long id) {
-        return ResponseEntity.ok(musicService.getMusic(id));
-    }
+    MusicDTO music = musicService.getMusic(id);
+    // Construire une URL complète pour fileUrl
+    music.setFileUrl("http://localhost:8080/api/music/files/" + music.getFileUrl());
+    return ResponseEntity.ok(music);
+}
 }

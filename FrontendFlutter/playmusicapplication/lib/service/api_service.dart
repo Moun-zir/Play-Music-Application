@@ -21,7 +21,7 @@ class ApiService {
           .map((m) => Music.fromJson(m))
           .toList();
     } else {
-      throw Exception('Failed to load music, status code: ${response.statusCode}');
+      throw Exception('Erreur de récupération des musics, status code: ${response.statusCode}');
     }
   } catch (e) {
     print('Error: $e');
@@ -80,6 +80,20 @@ class ApiService {
       print(await response.stream.bytesToString()); // Voir l'erreur exacte
     }
   }
+
+  Future<Music> getMusicById(int id) async {
+  try {
+    final response = await http.get(Uri.parse('$baseUrl/$id'));
+    if (response.statusCode == 200) {
+      return Music.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Erreur de récupération de la musique, status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error fetching music by ID: $e');
+    throw Exception('Failed to load music: $e');
+  }
+}
 
   Future<void> likeMusic(int musicId) async {
     final response = await http.post(Uri.parse('$baseUrl/music/$musicId/like'));

@@ -33,30 +33,34 @@ public class MusicService {
         if (file.isEmpty() || coverImage.isEmpty()) {
             throw new IllegalArgumentException("Le fichier audio et l'image de couverture sont obligatoires !");
         }
-
+    
         String fileUrl = fileStorageService.storeFile(file);
+        fileUrl = fileUrl.substring(fileUrl.lastIndexOf("\\") + 1);
         String coverUrl = fileStorageService.storeFile(coverImage);
-
+        coverUrl = coverUrl.substring(coverUrl.lastIndexOf("\\") + 1);
+    
         Music music = musicMapper.toEntity(musicDTO);
-        music.setFileUrl(fileUrl);
-        music.setCoverImageUrl(coverUrl);
+    
+        // Vérifie si les URLs sont déjà définies
+        if (music.getFileUrl() == null || music.getFileUrl().isEmpty()) {
+            music.setFileUrl(fileUrl);
+        }
+        if (music.getCoverImageUrl() == null || music.getCoverImageUrl().isEmpty()) {
+            music.setCoverImageUrl(coverUrl);
+        }
+    
         music.setLikes(0);
         music.setPlays(0);
-
+    
         if (music.getUser() == null) {
-            // User defaultUser = new User();
-            // defaultUser.setId(1L);  // ou l'id d'un utilisateur système
-            // music.setUser(defaultUser);
-
             User defaultUser = userRepository.findById(1L)
-              .orElseThrow(() -> new RuntimeException("Utilisateur par défaut introuvable"));
-        music.setUser(defaultUser);
+                .orElseThrow(() -> new RuntimeException("Utilisateur par défaut introuvable"));
+            music.setUser(defaultUser);
         }
-
-        
-
+    
         return musicMapper.toDto(musicRepository.save(music));
     }
+    
 
     public MusicDTO likeMusic(Long musicId) {
         Music music = musicRepository.findById(musicId)
@@ -64,14 +68,12 @@ public class MusicService {
         music.setLikes(music.getLikes() + 1);
         return musicMapper.toDto(musicRepository.save(music));
     }
-
-    public List<MusicDTO> getAllMusic(){
+    public List<MusicDTO> getAllMusic() {
         List<Music> musicList = musicRepository.findAll();
         return musicList.stream()
                         .map(musicMapper::toDto)
                         .collect(Collectors.toList());
     }
-
     public MusicDTO getMusic(Long id) {
         Music music = musicRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Music not found"));
