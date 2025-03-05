@@ -53,6 +53,7 @@ public class MusicController {
         List<MusicDTO> musicDTOList = musicService.getAllMusic();
         return ResponseEntity.ok(musicDTOList);
     }
+    
     @GetMapping("/{id}")
     public ResponseEntity<MusicDTO> getMusic(@PathVariable Long id) {
     MusicDTO music = musicService.getMusic(id);
