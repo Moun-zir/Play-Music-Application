@@ -17,7 +17,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   bool _isPlaying = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
-  final ApiService _apiService = ApiService(); // Instance d'ApiService
+  final ApiService _apiService = ApiService();
 
   @override
   void initState() {
@@ -26,27 +26,34 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   }
 
   Future<void> _initAudioPlayer() async {
-    print('Attempting to play audio from URL: ${widget.music.fileUrl}');
     if (widget.music.fileUrl != null && widget.music.fileUrl!.isNotEmpty) {
       try {
         await _audioPlayer.setSource(UrlSource(widget.music.fileUrl!));
         _audioPlayer.onDurationChanged.listen((Duration d) {
-          setState(() => _duration = d);
+          if (mounted) {
+            setState(() => _duration = d);
+          }
         });
         _audioPlayer.onPositionChanged.listen((Duration p) {
-          setState(() => _position = p);
+          if (mounted) {
+            setState(() => _position = p);
+          }
         });
       } catch (e) {
         print('Error setting audio source: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors de l’initialisation de la lecture : $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erreur lors de l’initialisation de la lecture : $e')),
+          );
+        }
       }
     } else {
       print('Audio URL (fileUrl) is missing or empty');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Aucune URL audio disponible')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Aucune URL audio disponible')),
+        );
+      }
     }
   }
 
@@ -65,15 +72,19 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
           _audioPlayer.play(UrlSource(widget.music.fileUrl!));
         } catch (e) {
           print('Error playing audio: $e');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erreur lors de la lecture : $e')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Erreur lors de la lecture : $e')),
+            );
+          }
         }
       } else {
         print('Audio URL (fileUrl) is missing or empty');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Aucune URL audio disponible')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Aucune URL audio disponible')),
+          );
+        }
       }
     }
     setState(() => _isPlaying = !_isPlaying);
@@ -82,7 +93,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 28, 44, 68), // Bleu sombre
+      backgroundColor: const Color.fromARGB(255, 28, 44, 68),
       appBar: AppBar(
         title: const Text("Music Player", style: TextStyle(color: Colors.white)),
         backgroundColor: const Color.fromARGB(255, 40, 77, 107),
@@ -94,9 +105,8 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Image arrondie
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(20), // Bordures arrondies
+                  borderRadius: BorderRadius.circular(20),
                   child: Image.network(
                     widget.music.coverImageUrl,
                     width: 350,
@@ -109,45 +119,47 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                 Text(widget.music.title, style: const TextStyle(color: Colors.white, fontSize: 24)),
                 Text(widget.music.artist, style: const TextStyle(color: Colors.grey, fontSize: 18)),
                 const SizedBox(height: 30),
-                // Contrôles de lecture
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
                       icon: const Icon(Icons.volume_up, color: Colors.white),
-                      onPressed: () {}, // À implémenter selon vos besoins
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.menu_rounded, color: Colors.white),
-                      onPressed: () {}, // À implémenter
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.shuffle_rounded, color: Colors.white),
-                      onPressed: () {}, // À implémenter
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.repeat, color: Colors.white),
-                      onPressed: () {}, // À implémenter
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.favorite_border_outlined, color: Colors.white),
                       onPressed: () async {
                         try {
                           await _apiService.likeMusic(widget.music.id);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Musique likée !')),
-                          );
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Musique likée !')),
+                            );
+                          }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Erreur lors du like : $e')),
-                          );
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Erreur lors du like : $e')),
+                            );
+                          }
                         }
                       },
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                // Barre de progression
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -171,7 +183,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                     ],
                   ),
                 ),
-                // Contrôles supplémentaires rapprochés de la barre de progression
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 70),
                   child: Row(
@@ -180,7 +191,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                       IconButton(
                         iconSize: 65,
                         icon: const Icon(Icons.skip_previous, color: Colors.white),
-                        onPressed: () {}, // À implémenter
+                        onPressed: () {},
                       ),
                       IconButton(
                         iconSize: 65,
@@ -190,7 +201,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                       IconButton(
                         iconSize: 65,
                         icon: const Icon(Icons.skip_next, color: Colors.white),
-                        onPressed: () {}, // À implémenter
+                        onPressed: () {},
                       ),
                     ],
                   ),

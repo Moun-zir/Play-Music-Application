@@ -5,9 +5,9 @@ import 'package:playmusicapplication/screens/list_music.dart';
 import 'package:playmusicapplication/widgets/menu.dart';
 
 class HomeScreen extends StatelessWidget {
-   final int userId;
-  
-  HomeScreen({Key? key, required this.userId}): super(key: key);
+  final int userId;
+
+  HomeScreen({Key? key, required this.userId}) : super(key: key);
 
   final List<Music> topLike = [
     Music(
@@ -70,58 +70,59 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ✅ **Carte principale sous l'AppBar**
-           Container(
-  padding: EdgeInsets.all(20),
-  height: 150,
-  decoration: BoxDecoration(
-    color: Color(0xFF1B263B), // Bleu plus clair
-    borderRadius: BorderRadius.circular(15),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.5),
-        blurRadius: 10,
-        offset: Offset(2, 4),
-      ),
-    ],
-    image: DecorationImage(
-      image: AssetImage("assets/images/jj.jpg"),
-      fit: BoxFit.cover,
-    ),
-  ),
-  child: Row(
-    children: [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          width: 80,
-          height: 80,
-          color: Colors.black.withOpacity(0.5), // Ajoute une légère opacité à l'image pour améliorer la lisibilité
-          child: Center(
-            child: Icon(
-              Icons.music_note,
-              color: Colors.white,
-              size: 30,
+            Container(
+              padding: EdgeInsets.all(20),
+              height: 150,
+              decoration: BoxDecoration(
+                color: Color(0xFF1B263B), // Bleu plus clair
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 10,
+                    offset: Offset(2, 4),
+                  ),
+                ],
+                image: DecorationImage(
+                  image: AssetImage("assets/images/jj.jpg"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.black.withOpacity(
+                          0.5), // Ajoute une légère opacité à l'image pour améliorer la lisibilité
+                      child: Center(
+                        child: Icon(
+                          Icons.music_note,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 15, height: 25),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Today's Top Hits",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(height: 5),
+                      Text("Best music for you!",
+                          style: TextStyle(color: Colors.white70)),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
-      ),
-      SizedBox(width: 15, height: 25),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Today's Top Hits",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
-          SizedBox(height: 5),
-          Text("Best music for you!",
-              style: TextStyle(color: Colors.white70)),
-        ],
-      ),
-    ],
-  ),
-),
 
             SizedBox(height: 20),
 

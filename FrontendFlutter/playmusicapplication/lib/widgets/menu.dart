@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:playmusicapplication/screens/playlist-screen.dart';
 import 'package:playmusicapplication/screens/music-screen.dart';
-import 'package:playmusicapplication/screens/list_music.dart';
+// import 'package:playmusicapplication/screens/list_music.dart';
+import 'package:playmusicapplication/screens/playscreen.dart';
+import 'package:playmusicapplication/screens/album_screen.dart';
 
 class MenuDrawer extends StatelessWidget {
   final int userId;
@@ -45,15 +47,24 @@ class MenuDrawer extends StatelessWidget {
               }));
             },
           ),
-          // ListTile(
-          //   leading: Icon(Icons.contact_mail),
-          //   title: Text('List Playlists'),
-          //  onTap: () {
-          //     Navigator.push(context, MaterialPageRoute(builder: (context) {
-          //       return MusicListScreen();
-          //     }));
-          //   },
-          // ),
+          ListTile(
+            leading: Icon(Icons.contact_mail),
+            title: Text('List Playlists'),
+           onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return AlbumScreen();
+              }));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.contact_mail),
+            title: Text('List Playlists'),
+           onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return PlaylistScreen();
+              }));
+            },
+          ),
           ListTile(
             leading: Icon(Icons.help),
             title: Text('FAQs'),
